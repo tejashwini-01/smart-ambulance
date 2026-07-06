@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Smart Traffic Controller</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🚦 Smart Traffic Controller</div>
+    <nav class="actions">
+      <a class="btn" href="{{ url_for('drivers') }}">🚑 Ambulance Request</a>
+      <a class="btn ghost" href="{{ url_for('view_logs') }}">📜 View Logs</a>
+    </nav>
+  </header>
+
+  <main class="canvas-wrap">
+  <div id="sim">
+
+    <!-- Roads -->
+    <div class="road vertical"></div>
+    <div class="road horizontal"></div>
+
+    <!-- Crosswalk Stripes -->
+    <div class="crosswalk north"></div>
+    <div class="crosswalk south"></div>
+    <div class="crosswalk west"></div>
+    <div class="crosswalk east"></div>
+
+    <!-- ✅ Add Lane Divider Stripes -->
+    <div class="lane-divider"></div>
+    <div class="lane-divider vertical"></div>
+
+    <!-- SIGNALS -->
+    <div class="signal north" data-lane="1">
+  <div class="lights-row">
+    <div class="light red"></div>
+    <div class="light yellow"></div>
+    <div class="light green"></div>
+  </div>
+  <div class="timer" id="timer1">0s</div>
+  <div class="label">Lane 1 (North)</div>
+  
+</div>
+
+    <div class="signal west" data-lane="2">
+      <div class="light red"></div><div class="light yellow"></div><div class="light green"></div>
+      <div class="label">Lane 2 (West)</div>
+      <div class="timer" id="timer2">0s</div>
+    </div>
+
+    <div class="signal east" data-lane="3">
+      <div class="light red"></div><div class="light yellow"></div><div class="light green"></div>
+      <div class="label">Lane 3 (East)</div>
+      <div class="timer" id="timer3">0s</div>
+    </div>
+
+    <div class="signal south" data-lane="4">
+  <div class="lights-row">
+    <div class="light red"></div>
+    <div class="light yellow"></div>
+    <div class="light green"></div>
+  </div>
+  <div class="timer" id="timer4">0s</div>
+  <div class="label">Lane 4 (South)</div>
+  
+</div>
+<!-- VEHICLES FOR EACH LANE -->
+<div class="vehicle car" id="v1"></div>
+<div class="vehicle car" id="v2"></div>
+<div class="vehicle car" id="v3"></div>
+<div class="vehicle car" id="v4"></div>
+    <!-- Vehicles -->
+    <div id="vehicles-layer"></div>
+
+  </div>
+
+  <!-- Queue Badge -->
+  <aside id="queueBadge">
+    <span>🚨 Emergency Queue:</span>
+    <strong id="queueLen">0</strong>
+    <div id="queueList"></div>
+  </aside>
+</main>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

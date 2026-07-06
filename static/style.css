@@ -1,0 +1,303 @@
+:root{
+  --grass:#cfe7b9;
+  --road:#2f3237;
+  --white:#ffffff;
+}
+
+body{
+  margin:0;
+  background:#e9f3e4;
+  font-family:system-ui;
+  text-align:center;
+}
+
+.canvas-wrap{position:relative; padding:12px;}
+#sim{
+  width:min(980px,96vw);
+  height:620px;
+  background:var(--grass);
+  margin:auto;
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+}
+
+/* ROAD SHAPES */
+.road{
+  position:absolute;
+  background:var(--road);
+  box-shadow:inset 0 8px 15px rgba(0,0,0,0.4);
+  z-index:1;
+  border-radius:14px;
+}
+
+/* Equal Length & Width Roads */
+.road.vertical{
+  width:230px;
+  height:100%;
+  left:50%; transform:translateX(-50%);
+}
+.road.horizontal{
+  height:230px;
+  width:100%;
+  top:50%; transform:translateY(-50%);
+}
+
+/* CENTER JUNCTION */
+#sim::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width:230px; height:230px;
+  transform:translate(-50%,-50%);
+  background:var(--road);
+  border-radius:18px;
+  z-index:2;
+}
+
+/* ZEBRA CROSSWALKS (closer to center) */
+/* ✅ UNIFORM ZEBRA CROSSWALKS (all same style) */
+.crosswalk{
+  position:absolute;
+  z-index:3;
+  opacity:0.95;
+}
+
+/* North & South crosswalks (horizontal stripes) */
+.crosswalk.north,
+.crosswalk.south{
+  width:120px;
+  height:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background: repeating-linear-gradient(
+    to right,
+    white 0 12px,
+    transparent 12px 22px
+  );
+}
+
+.crosswalk.north{ top:180px; }
+.crosswalk.south{ bottom:180px; }
+
+/* West & East crosswalks (vertical stripes) */
+.crosswalk.west,
+.crosswalk.east{
+  width:20px;
+  height:120px;
+  top:50%;
+  transform:translateY(-50%);
+  background: repeating-linear-gradient(
+    to bottom,
+    white 0 12px,
+    transparent 12px 22px
+  );
+}
+
+.crosswalk.west{ left:350px; }
+.crosswalk.east{ right:350px; }
+
+/* DASHED LANE DIVIDERS */
+/* ✅ CLEAN LANE CENTER DASHED DIVIDERS (no overlap at center) */
+
+/* Vertical divider */
+/* === CLEAN UNIFORM DASHED CENTER LINES FOR ALL 4 LANES === */
+
+/* Vertical lane divider (Lane 1 + Lane 4) */
+.road.vertical::before{
+  content:"";
+  position:absolute;
+  width:6px;
+  height:100%;
+  left:50%;
+  transform:translateX(-50%);
+  background:repeating-linear-gradient(
+    white 0 14px,
+    transparent 14px 26px
+  );
+  z-index:4;
+}
+
+/* Horizontal lane divider (Lane 2 + Lane 3) */
+/* Horizontal lane divider (Lane 2 + Lane 3) */
+.road.horizontal::before{
+  content:"";
+  position:absolute;
+  height:6px;
+  width:calc(100% - 30px); /* leave space for center block */
+  left:50%;
+  transform:translate(-50%, -50%);
+  top:50%;
+  background:repeating-linear-gradient(
+    to right,
+    white 0 14px,
+    transparent 14px 26px
+  );
+  z-index:4;
+}
+/* TRAFFIC SIGNALS */
+.signal{
+  position:absolute;
+  width:60px; padding:6px;
+  background:#0b0e12;
+  border-radius:10px;
+  color:#fff;
+  text-align:center;
+  z-index:6;
+}
+.signal .light{width:14px;height:14px;border-radius:50%;margin:4px auto;opacity:.25}
+.signal .light.red{background:#ff5d5d}
+.signal .light.yellow{background:#ffd056}
+.signal .light.green{background:#3bd268}
+.signal .label{font-size:11px;font-weight:600;margin-top:4px;}
+.signal .timer{font-size:11px;margin-top:3px;}
+
+.signal.north{ top:250px; left:50%; transform:translateX(-50%);}
+.signal.south{ bottom:200px; left:50%; transform:translateX(-50%);}
+.signal.west{ left:372px; top:50%; transform:translateY(-50%);}
+.signal.east{ right:372px; top:50%; transform:translateY(-50%);}
+
+/* VEHICLES */
+#vehicles-layer{ position:absolute; inset:0; z-index:5; pointer-events:none; }
+.vehicle{ position:absolute; transform:translate(-50%,-50%); }
+/* === Horizontal Traffic Signal for Lane 1 and Lane 4 === */
+.signal.north,
+.signal.south {
+  width: 100px;           /* wider box */
+  height: 50px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row; 
+  /* lights arranged horizontally */
+}
+
+/* Lights arranged across */
+.signal.north .light,
+.signal.south .light {
+  width:14px;height:14px;border-radius:50%;margin:6px auto;opacity:.25}
+
+/* Remove vertical spacing inside these signals */
+.signal.north .label,
+.signal.north .timer,
+.signal.south .label,
+.signal.south .timer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+}
+
+/* Label directly below box */
+.signal.north .label { top: 42px; }
+.signal.south .label { bottom: 42px; }
+
+/* Timer below label */
+.signal.north .timer { top: 60px; }
+.signal.south .timer { bottom: 60px; }
+
+/* Updated placement near junction */
+.signal.north { top: 155px; }
+.signal.south { bottom: 155px; }
+/* === NEW DESIGN FOR LANE 1 & LANE 4 TRAFFIC SIGNAL BOX === */
+
+.signal.north,
+.signal.south {
+  width: 130px;        /* Wider box */
+  padding: 6px 6px;
+  display: flex;
+  flex-direction: column;   /* Stack content vertically */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* The lights row (keep horizontal) */
+.signal.north .lights-row,
+.signal.south .lights-row {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  margin-top:-20px;
+}
+
+/* Remove old margins on each light */
+.signal.north .light,
+.signal.south .light {
+  margin: 0;
+  width: 14px;
+  height: 14px;
+}
+
+/* Label + Timer centered below */
+.signal.north .label,
+.signal.south .label,
+.signal.north .timer,
+.signal.south .timer {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  text-align: center;
+  margin-top:-17px;
+  margin-bottom: -40px;
+
+}
+
+/* Move box slightly closer to center */
+.signal.north { top: 185px; }
+.signal.south { bottom: 190px; }
+.signal.north{ top:203px;
+ width: 100px;  
+height: 20px;}
+ .signal.south{ top:360px;
+ width: 100px;
+height: 45px;  }
+ .signal.west{width: 50px;}
+ .signal.east{width: 50px;}
+ .signal.south .timer {
+  top: 42px;
+ }
+ .signal.north{ height: 45px};
+
+/* Swap timer and label positions for Lane 1 and Lane 4 */
+
+/* Fix vertical stacking order for Lane 1 & Lane 4 signals */
+/* ===== Smaller vehicle sizes ===== */
+
+.vehicle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Car */
+.vehicle.car {
+  width: 32px;
+  height: 16px;
+}
+
+/* Auto */
+.vehicle.auto {
+  width: 26px;
+  height: 16px;
+}
+
+/* Bike */
+.vehicle.bike {
+  width: 20px;
+  height: 10px;
+}
+
+/* Bus */
+.vehicle.bus {
+  width: 54px;
+  height: 24px;
+}
+
+/* Ambulance */
+.vehicle.ambulance {
+  width: 36px;
+  height: 18px;
+}

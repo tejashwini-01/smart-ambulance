@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Ambulance Priority Request</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    body{background:#f4f7ff;font-family:system-ui,Arial;padding:20px;display:flex;justify-content:center}
+    .card{background:#fff;max-width:420px;width:100%;padding:28px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+    h2{margin:0 0 16px}
+    label{display:block;margin:14px 0 6px;font-weight:600}
+    input,select{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:8px}
+    button{margin-top:16px;width:100%;padding:12px;border:0;border-radius:10px;background:#1a73e8;color:#fff;font-weight:700;cursor:pointer}
+    a{display:block;text-align:center;margin-top:10px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🚑 Ambulance Priority Request</h2>
+    <form action="/submit_request" method="POST">
+      <label>Driver Name</label>
+      <input name="name" required placeholder="Driver name"/>
+
+      <label>Vehicle Number</label>
+      <input name="vehicle" required placeholder="KA-00-0000"/>
+
+      <label>Lane (1-4)</label>
+      <input name="lane" type="number" min="1" max="4" required/>
+
+      <label>Green Duration</label>
+      <select name="duration" required>
+        <option value="30">30s</option>
+        <option value="60">60s</option>
+        <option value="90">90s</option>
+      </select>
+
+      <button type="submit">Send Request</button>
+    </form>
+    <a href="{{ url_for('index') }}">⬅ Back</a>
+  </div>
+</body>
+</html>
